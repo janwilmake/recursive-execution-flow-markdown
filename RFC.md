@@ -43,8 +43,8 @@ This RFC proposes a standardized markdown format using blockquote nesting to rep
 
 ### Execution Rules
 
-1. **Nesting Constraint**: A deeply nested component cannot execute before its parent component has been initiated
-2. **Sibling Independence**: Components at the same nesting level can execute in parallel unless explicitly dependencies exist
+1. **Nesting Constraint**: A deeply nested component cannot execute before its parent component has been initiated.
+2. **Execution Order**: Components at the same nesting level can execute in parallel unless dependencies exist. If dependencies aren't known, sequential execution must be guaranteed to be possible. How dependencies are defined is up to the implementation and is not part of this RFC.
 3. **Content Streaming**: Component content can be streamed word-by-word while maintaining proper indentation
 4. **Line Wrapping**: Content automatically wraps at 80 characters while preserving blockquote structure
 
@@ -65,16 +65,17 @@ This RFC proposes a standardized markdown format using blockquote nesting to rep
 #### Tools/APIs
 
 ```markdown
-> **GET** api.example.com/endpoint?param={value}
+> **GET** api.example.com/endpoint/{pathparam}?query={query}
 ```
 
 ### Status Indicators (Optional)
 
 ```markdown
-> ✅ **completed_service**
-> 🟠 **in_progress_service**  
-> ❌ **failed_service**
-> ⏳ **pending_service**
+> ✅ **completed**
+> 🟠 **in_progress**  
+> ❌ **failed**
+> 🚫 **cancelled**
+> ⏳ **pending**
 ```
 
 ### Thought Process (Optional)
@@ -369,6 +370,45 @@ The campaign needs to target millennials interested in sustainable technology.
 > > - Coordinate content timing
 
 Campaign ready for launch. All components aligned for maximum impact.
+```
+
+### Example 6: Error Handling and Cancellation
+
+```markdown
+# Form Submission Workflow (Status: ❌)
+
+## Data Collection Phase (Status: ✅)
+
+> ✅ **form_validator**
+>
+> - Validate required fields
+> - Check data formats
+> - Sanitize inputs
+>
+> All validation checks passed. Form data ready for approval.
+
+## Approval Phase (Status: ❌)
+
+> ❌ **approval_human** (Department Manager)
+>
+> - Review form submission
+> - Approve or reject request
+>
+> Error: User not available - out of office until next week.
+>
+> > 🚫 **notification_service**
+> >
+> > - Send approval request email
+> > - Set reminder notifications
+> >
+> > Cancelled: Cannot proceed without human approval.
+> >
+> > > 🚫 **database_update**
+> > >
+> > > - Update form status
+> > > - Log approval decision
+> > >
+> > > Cancelled: No approval decision to record.
 ```
 
 ## Use Cases
