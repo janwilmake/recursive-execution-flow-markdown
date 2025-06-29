@@ -9,5 +9,3 @@ To try:
 ```
 curl -N --no-buffer http://localhost:8787/level/1
 ```
-
-NB: in prod, doesnt work due to it calling itself

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Viewer</title>
+    <style>
+        body {
+            font-family: monospace;
+            margin: 20px;
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+
+        pre {
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid #444;
+        }
+
+        .status {
+            margin-bottom: 10px;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Live Stream</h1>
+    <div class="status" id="status">Connecting...</div>
+    <pre id="output"></pre>
+
+    <script>
+        const output = document.getElementById('output');
+        const status = document.getElementById('status');
+
+        async function startStream() {
+            try {
+                const response = await fetch('/level/4');
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+
+                status.textContent = 'Connected - Streaming...';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value, { stream: true });
+                    output.textContent += chunk;
+
+                    // Auto-scroll to bottom
+                    output.scrollTop = output.scrollHeight;
+                }
+
+                status.textContent = 'Stream completed.';
+            } catch (error) {
+                status.textContent = `Error: ${error.message}`;
+                console.error('Stream error:', error);
+            }
+        }
+
+        // Start streaming when page loads
+        startStream();
+    </script>
+</body>
+
+</html>
