@@ -1,0 +1,5 @@
+name = "recursive-streamer"
+compatibility_date = "2025-06-27"
+main = "stream.js"
+route.custom_domain = true
+route.pattern = "recursive-stream.chatcompletions.com"
