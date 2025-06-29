@@ -1,0 +1,136 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "OpenWeatherMap API",
+    "version": "2.5.0",
+    "description": "Weather data API providing current weather and forecasts"
+  },
+  "servers": [
+    {
+      "url": "https://api.openweathermap.org/data/2.5"
+    }
+  ],
+  "paths": {
+    "/weather": {
+      "get": {
+        "summary": "Get current weather data",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "City name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "appid",
+            "in": "query",
+            "description": "API key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current weather data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "weather": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "main": { "type": "string" },
+                          "description": { "type": "string" }
+                        }
+                      }
+                    },
+                    "main": {
+                      "type": "object",
+                      "properties": {
+                        "temp": { "type": "number" },
+                        "humidity": { "type": "number" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/forecast": {
+      "get": {
+        "summary": "Get weather forecast",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "City name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "appid",
+            "in": "query",
+            "description": "API key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Weather forecast data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "dt": { "type": "number" },
+                          "main": {
+                            "type": "object",
+                            "properties": {
+                              "temp": { "type": "number" },
+                              "humidity": { "type": "number" }
+                            }
+                          },
+                          "weather": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "main": { "type": "string" },
+                                "description": { "type": "string" }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

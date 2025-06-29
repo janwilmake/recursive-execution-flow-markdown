@@ -1,0 +1,88 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "The Cat API",
+    "version": "1.0.0",
+    "description": "Cat images and breed information API"
+  },
+  "servers": [
+    {
+      "url": "https://api.thecatapi.com/v1"
+    }
+  ],
+  "paths": {
+    "/images/search": {
+      "get": {
+        "summary": "Search for cat images",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of images to return",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "breed_ids",
+            "in": "query",
+            "description": "Specific breed IDs",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cat images",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string" },
+                      "url": { "type": "string" },
+                      "width": { "type": "number" },
+                      "height": { "type": "number" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/breeds": {
+      "get": {
+        "summary": "Get cat breeds",
+        "responses": {
+          "200": {
+            "description": "Cat breeds list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string" },
+                      "name": { "type": "string" },
+                      "temperament": { "type": "string" },
+                      "origin": { "type": "string" },
+                      "description": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

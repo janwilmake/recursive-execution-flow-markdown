@@ -1,0 +1,66 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "REST Countries API",
+    "version": "3.1.0",
+    "description": "Information about countries including capitals, currencies, and geography"
+  },
+  "servers": [
+    {
+      "url": "https://restcountries.com/v3.1"
+    }
+  ],
+  "paths": {
+    "/capital/{capital}": {
+      "get": {
+        "summary": "Get country by capital",
+        "parameters": [
+          {
+            "name": "capital",
+            "in": "path",
+            "description": "Capital city name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Country information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "object",
+                        "properties": {
+                          "common": { "type": "string" },
+                          "official": { "type": "string" }
+                        }
+                      },
+                      "capital": {
+                        "type": "array",
+                        "items": { "type": "string" }
+                      },
+                      "currencies": {
+                        "type": "object"
+                      },
+                      "timezones": {
+                        "type": "array",
+                        "items": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

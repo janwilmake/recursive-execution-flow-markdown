@@ -93,8 +93,10 @@ Detailed explanation of why this component is necessary and how it fits into the
 
 ### Parsing Algorithm
 
-1. Count leading `>` characters to determine nesting level
-2. Extract component headers using `# ComponentName` pattern
+NB: Parsing is only recommended for workflow definition files without generated or untrursted markdown (that may contain `>` itself in tool response or content)
+
+1. Extract component headers using `# ComponentName` pattern
+2. Count leading `>` characters to determine nesting level
 3. Preserve content indentation by maintaining blockquote depth
 4. Support streaming by processing incomplete lines
 

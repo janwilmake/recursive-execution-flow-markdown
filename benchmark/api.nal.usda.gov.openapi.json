@@ -1,0 +1,132 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "USDA Food Data Central API",
+    "version": "1.0.0",
+    "description": "Nutritional information database for food products"
+  },
+  "servers": [
+    {
+      "url": "https://api.nal.usda.gov/fdc/v1"
+    }
+  ],
+  "paths": {
+    "/foods/search": {
+      "get": {
+        "summary": "Search for foods",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Search term",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "description": "API key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "foods": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "fdcId": { "type": "number" },
+                          "description": { "type": "string" },
+                          "foodNutrients": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "nutrientName": { "type": "string" },
+                                "value": { "type": "number" },
+                                "unitName": { "type": "string" }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/food/{fdcId}": {
+      "get": {
+        "summary": "Get food details by ID",
+        "parameters": [
+          {
+            "name": "fdcId",
+            "in": "path",
+            "description": "Food Data Central ID",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "api_key",
+            "in": "query",
+            "description": "API key",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Food details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "fdcId": { "type": "number" },
+                    "description": { "type": "string" },
+                    "foodNutrients": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "nutrient": {
+                            "type": "object",
+                            "properties": {
+                              "name": { "type": "string" },
+                              "unitName": { "type": "string" }
+                            }
+                          },
+                          "amount": { "type": "number" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

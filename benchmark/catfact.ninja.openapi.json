@@ -1,0 +1,96 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Cat Facts API",
+    "version": "1.0.0",
+    "description": "Random cat facts for entertainment and education"
+  },
+  "servers": [
+    {
+      "url": "https://catfact.ninja"
+    }
+  ],
+  "paths": {
+    "/fact": {
+      "get": {
+        "summary": "Get a random cat fact",
+        "parameters": [
+          {
+            "name": "max_length",
+            "in": "query",
+            "description": "Maximum length of the fact",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Random cat fact",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "fact": { "type": "string" },
+                    "length": { "type": "number" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/facts": {
+      "get": {
+        "summary": "Get multiple cat facts",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of facts to return",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "max_length",
+            "in": "query",
+            "description": "Maximum length of facts",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Multiple cat facts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "fact": { "type": "string" },
+                          "length": { "type": "number" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
