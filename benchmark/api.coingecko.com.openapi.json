@@ -5,13 +5,9 @@
     "version": "3.0.0",
     "description": "Cryptocurrency market data and information"
   },
-  "servers": [
-    {
-      "url": "https://api.coingecko.com/api/v3"
-    }
-  ],
+
   "paths": {
-    "/simple/price": {
+    "/api/v3/simple/price": {
       "get": {
         "summary": "Get cryptocurrency prices",
         "parameters": [
@@ -54,7 +50,7 @@
         }
       }
     },
-    "/coins/{id}": {
+    "/api/v3/coins/{id}": {
       "get": {
         "summary": "Get detailed coin information",
         "parameters": [
@@ -100,7 +96,7 @@
         }
       }
     },
-    "/coins/{id}/market_chart": {
+    "/api/v3/coins/{id}/market_chart": {
       "get": {
         "summary": "Get coin market chart data",
         "parameters": [
@@ -162,7 +158,7 @@
         }
       }
     },
-    "/global": {
+    "/api/v3/global": {
       "get": {
         "summary": "Get global cryptocurrency data",
         "responses": {

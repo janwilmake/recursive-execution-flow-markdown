@@ -1,14 +1,14 @@
 // This parser correctly parses the workflow defenition into simple hierarchical steps.
 import { lexer, Token } from "marked";
 
-interface HMREFStep {
+export interface HMREFStep {
   id: number;
   parent_id: number | null;
   level: number;
   content: string;
 }
 
-interface HMREFDocument {
+export interface HMREFDocument {
   steps: HMREFStep[];
 }
 
@@ -19,7 +19,7 @@ interface BlockquoteToken {
   tokens: Token[];
 }
 
-function parseHMREF(markdown: string): HMREFDocument {
+export function parseHMREF(markdown: string): HMREFDocument {
   const tokens = lexer(markdown);
   const steps: HMREFStep[] = [];
   let currentId = 1;
@@ -164,5 +164,8 @@ The system will validate the customer information, set up their account across m
 
 **Output:** Fully onboarded customer with verified identity, provisioned accounts across all systems, configured services, sent welcome materials, and established onboarding timeline.`;
 
-const result = parseHMREF(testMarkdown);
-console.log(JSON.stringify(result, null, 2));
+//@ts-ignore
+if (require.main === module) {
+  const result = parseHMREF(testMarkdown);
+  console.log(JSON.stringify(result, null, 2));
+}

@@ -5,13 +5,8 @@
     "version": "2.5.0",
     "description": "Weather data API providing current weather and forecasts"
   },
-  "servers": [
-    {
-      "url": "https://api.openweathermap.org/data/2.5"
-    }
-  ],
   "paths": {
-    "/weather": {
+    "/data/2.5/weather": {
       "get": {
         "summary": "Get current weather data",
         "parameters": [
@@ -67,7 +62,7 @@
         }
       }
     },
-    "/forecast": {
+    "/data/2.5/forecast": {
       "get": {
         "summary": "Get weather forecast",
         "parameters": [

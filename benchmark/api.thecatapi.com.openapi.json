@@ -5,13 +5,8 @@
     "version": "1.0.0",
     "description": "Cat images and breed information API"
   },
-  "servers": [
-    {
-      "url": "https://api.thecatapi.com/v1"
-    }
-  ],
   "paths": {
-    "/images/search": {
+    "/v1/images/search": {
       "get": {
         "summary": "Search for cat images",
         "parameters": [
@@ -57,7 +52,7 @@
         }
       }
     },
-    "/breeds": {
+    "/v1/breeds": {
       "get": {
         "summary": "Get cat breeds",
         "responses": {

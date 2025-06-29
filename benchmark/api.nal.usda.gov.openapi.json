@@ -5,13 +5,9 @@
     "version": "1.0.0",
     "description": "Nutritional information database for food products"
   },
-  "servers": [
-    {
-      "url": "https://api.nal.usda.gov/fdc/v1"
-    }
-  ],
+
   "paths": {
-    "/foods/search": {
+    "/fdc/v1/foods/search": {
       "get": {
         "summary": "Search for foods",
         "parameters": [
@@ -71,7 +67,7 @@
         }
       }
     },
-    "/food/{fdcId}": {
+    "/fdc/v1/food/{fdcId}": {
       "get": {
         "summary": "Get food details by ID",
         "parameters": [

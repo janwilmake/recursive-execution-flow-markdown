@@ -5,11 +5,6 @@
     "version": "1.0.0",
     "description": "Random cat facts for entertainment and education"
   },
-  "servers": [
-    {
-      "url": "https://catfact.ninja"
-    }
-  ],
   "paths": {
     "/fact": {
       "get": {

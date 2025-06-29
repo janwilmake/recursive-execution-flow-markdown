@@ -5,13 +5,9 @@
     "version": "3.1.0",
     "description": "Information about countries including capitals, currencies, and geography"
   },
-  "servers": [
-    {
-      "url": "https://restcountries.com/v3.1"
-    }
-  ],
+
   "paths": {
-    "/capital/{capital}": {
+    "/v3.1/capital/{capital}": {
       "get": {
         "summary": "Get country by capital",
         "parameters": [

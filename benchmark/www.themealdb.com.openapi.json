@@ -5,13 +5,8 @@
     "version": "1.0.0",
     "description": "Recipe database with meal information and cooking instructions"
   },
-  "servers": [
-    {
-      "url": "https://www.themealdb.com/api/json/v1/1"
-    }
-  ],
   "paths": {
-    "/search.php": {
+    "/api/json/v1/1/search.php": {
       "get": {
         "summary": "Search for meals",
         "parameters": [
@@ -53,7 +48,7 @@
         }
       }
     },
-    "/lookup.php": {
+    "/api/json/v1/1/lookup.php": {
       "get": {
         "summary": "Lookup meal by ID",
         "parameters": [
@@ -96,7 +91,7 @@
         }
       }
     },
-    "/filter.php": {
+    "/api/json/v1/1/filter.php": {
       "get": {
         "summary": "Filter meals by category",
         "parameters": [

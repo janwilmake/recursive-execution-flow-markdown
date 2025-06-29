@@ -1,0 +1,3537 @@
+[
+  {
+    "script_name": "cryptocurrency-portfolio-analyzer",
+    "definition": "# Cryptocurrency Portfolio Analysis and Insights\n\n**Input:** List of cryptocurrency holdings with quantities and purchase prices\n\nAnalyze cryptocurrency portfolio performance and provide market insights for investment decisions.\n\n> # Current Market Data Service\n>\n> **Input:** List of cryptocurrency symbols from user portfolio\n>\n> Retrieve real-time price data and market information for portfolio cryptocurrencies.\n>\n> **Tool:** https://api.coingecko.com/api/v3/simple/price\n>\n> > # Detailed Coin Information\n> >\n> > **Input:** Specific cryptocurrency IDs for comprehensive analysis\n> >\n> > Get detailed market data including market cap, volume, and price changes.\n> >\n> > **Tool:** https://api.coingecko.com/api/v3/coins/{id}\n> >\n> > **Output:** Comprehensive coin data with market metrics, price history, and community statistics\n>\n> > # Historical Price Analysis\n> >\n> > **Input:** Cryptocurrency ID and date range for trend analysis\n> >\n> > Retrieve historical price data to analyze performance trends.\n> >\n> > **Tool:** https://api.coingecko.com/api/v3/coins/{id}/market_chart\n> >\n> > **Output:** Historical price, market cap, and volume data for trend analysis\n\n> # Portfolio Performance Calculator\n>\n> **Input:** Current prices, historical data, and user's purchase information\n>\n> Calculate portfolio performance metrics and provide investment insights.\n>\n> > # Profit/Loss Analysis\n> >\n> > **Input:** Purchase prices, quantities, and current market values\n> >\n> > Calculate individual coin and total portfolio profit/loss metrics.\n> >\n> > **Output:** Absolute and percentage gains/losses per coin and total portfolio\n>\n> > # Risk Assessment\n> >\n> > **Input:** Portfolio composition and market volatility data\n> >\n> > Analyze portfolio risk based on market volatility and diversification.\n> >\n> > **Output:** Risk score, diversification analysis, and volatility metrics\n\n> # Market Trend Analysis\n>\n> **Input:** Global cryptocurrency market data and portfolio holdings\n>\n> Analyze broader market trends that might affect portfolio performance.\n>\n> **Tool:** https://api.coingecko.com/api/v3/global\n>\n> > # Market Sentiment Indicators\n> >\n> > **Input:** Global market data and individual coin performance\n> >\n> > Assess market sentiment and its potential impact on portfolio.\n> >\n> > **Output:** Market sentiment score, trend indicators, and correlation analysis\n>\n> > # Investment Recommendations\n> >\n> > **Input:** Portfolio analysis results and market trend data\n> >\n> > Generate actionable investment recommendations based on analysis.\n> >\n> > **Output:** Buy/hold/sell recommendations with reasoning and risk considerations\n\n**Output:** Comprehensive portfolio analysis with current valuations, performance metrics, risk assessment, market insights, and personalized investment recommendations",
+    "agents": [
+      {
+        "id": 1,
+        "parent_id": null,
+        "level": 0,
+        "content": "# Cryptocurrency Portfolio Analysis and Insights\n\n**Input:** List of cryptocurrency holdings with quantities and purchase prices\n\nAnalyze cryptocurrency portfolio performance and provide market insights for investment decisions.\n\n\n\n\n\n\n\n**Output:** Comprehensive portfolio analysis with current valuations, performance metrics, risk assessment, market insights, and personalized investment recommendations",
+        "tools": [
+          {
+            "hostname": "api.coingecko.com",
+            "path": "/api/v3/simple/price",
+            "method": "GET",
+            "summary": "Get cryptocurrency prices",
+            "parameters": [
+              {
+                "name": "ids",
+                "in": "query",
+                "description": "Cryptocurrency IDs",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "vs_currencies",
+                "in": "query",
+                "description": "Target currencies",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Cryptocurrency prices",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.coingecko.com",
+            "path": "/api/v3/coins/{id}",
+            "method": "GET",
+            "summary": "Get detailed coin information",
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Coin ID",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Detailed coin information",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "symbol": {
+                          "type": "string"
+                        },
+                        "market_data": {
+                          "type": "object",
+                          "properties": {
+                            "current_price": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "number"
+                              }
+                            },
+                            "market_cap": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.coingecko.com",
+            "path": "/api/v3/coins/{id}/market_chart",
+            "method": "GET",
+            "summary": "Get coin market chart data",
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Coin ID",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "vs_currency",
+                "in": "query",
+                "description": "Target currency",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "days",
+                "in": "query",
+                "description": "Number of days",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Market chart data",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "prices": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "market_caps": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.coingecko.com",
+            "path": "/api/v3/global",
+            "method": "GET",
+            "summary": "Get global cryptocurrency data",
+            "responses": {
+              "200": {
+                "description": "Global market data",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "active_cryptocurrencies": {
+                              "type": "number"
+                            },
+                            "total_market_cap": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "number"
+                              }
+                            },
+                            "total_volume": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "parent_id": 1,
+        "level": 1,
+        "content": "# Current Market Data Service\n\n**Input:** List of cryptocurrency symbols from user portfolio\n\nRetrieve real-time price data and market information for portfolio cryptocurrencies.\n\n**Tool:** https://api.coingecko.com/api/v3/simple/price",
+        "tools": [
+          {
+            "hostname": "api.coingecko.com",
+            "path": "/api/v3/simple/price",
+            "method": "GET",
+            "summary": "Get cryptocurrency prices",
+            "parameters": [
+              {
+                "name": "ids",
+                "in": "query",
+                "description": "Cryptocurrency IDs",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "vs_currencies",
+                "in": "query",
+                "description": "Target currencies",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Cryptocurrency prices",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.coingecko.com",
+            "path": "/api/v3/coins/{id}",
+            "method": "GET",
+            "summary": "Get detailed coin information",
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Coin ID",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Detailed coin information",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "symbol": {
+                          "type": "string"
+                        },
+                        "market_data": {
+                          "type": "object",
+                          "properties": {
+                            "current_price": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "number"
+                              }
+                            },
+                            "market_cap": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.coingecko.com",
+            "path": "/api/v3/coins/{id}/market_chart",
+            "method": "GET",
+            "summary": "Get coin market chart data",
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Coin ID",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "vs_currency",
+                "in": "query",
+                "description": "Target currency",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "days",
+                "in": "query",
+                "description": "Number of days",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Market chart data",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "prices": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "market_caps": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "parent_id": 2,
+        "level": 2,
+        "content": "# Detailed Coin Information\n\n**Input:** Specific cryptocurrency IDs for comprehensive analysis\n\nGet detailed market data including market cap, volume, and price changes.\n\n**Tool:** https://api.coingecko.com/api/v3/coins/{id}\n\n**Output:** Comprehensive coin data with market metrics, price history, and community statistics",
+        "tools": [
+          {
+            "hostname": "api.coingecko.com",
+            "path": "/api/v3/coins/{id}",
+            "method": "GET",
+            "summary": "Get detailed coin information",
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Coin ID",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Detailed coin information",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "symbol": {
+                          "type": "string"
+                        },
+                        "market_data": {
+                          "type": "object",
+                          "properties": {
+                            "current_price": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "number"
+                              }
+                            },
+                            "market_cap": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "parent_id": 2,
+        "level": 2,
+        "content": "# Historical Price Analysis\n\n**Input:** Cryptocurrency ID and date range for trend analysis\n\nRetrieve historical price data to analyze performance trends.\n\n**Tool:** https://api.coingecko.com/api/v3/coins/{id}/market_chart\n\n**Output:** Historical price, market cap, and volume data for trend analysis",
+        "tools": [
+          {
+            "hostname": "api.coingecko.com",
+            "path": "/api/v3/coins/{id}/market_chart",
+            "method": "GET",
+            "summary": "Get coin market chart data",
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "description": "Coin ID",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "vs_currency",
+                "in": "query",
+                "description": "Target currency",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "days",
+                "in": "query",
+                "description": "Number of days",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Market chart data",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "prices": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "market_caps": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "parent_id": 1,
+        "level": 1,
+        "content": "# Portfolio Performance Calculator\n\n**Input:** Current prices, historical data, and user's purchase information\n\nCalculate portfolio performance metrics and provide investment insights.",
+        "tools": []
+      },
+      {
+        "id": 6,
+        "parent_id": 5,
+        "level": 2,
+        "content": "# Profit/Loss Analysis\n\n**Input:** Purchase prices, quantities, and current market values\n\nCalculate individual coin and total portfolio profit/loss metrics.\n\n**Output:** Absolute and percentage gains/losses per coin and total portfolio",
+        "tools": []
+      },
+      {
+        "id": 7,
+        "parent_id": 5,
+        "level": 2,
+        "content": "# Risk Assessment\n\n**Input:** Portfolio composition and market volatility data\n\nAnalyze portfolio risk based on market volatility and diversification.\n\n**Output:** Risk score, diversification analysis, and volatility metrics",
+        "tools": []
+      },
+      {
+        "id": 8,
+        "parent_id": 1,
+        "level": 1,
+        "content": "# Market Trend Analysis\n\n**Input:** Global cryptocurrency market data and portfolio holdings\n\nAnalyze broader market trends that might affect portfolio performance.\n\n**Tool:** https://api.coingecko.com/api/v3/global",
+        "tools": [
+          {
+            "hostname": "api.coingecko.com",
+            "path": "/api/v3/global",
+            "method": "GET",
+            "summary": "Get global cryptocurrency data",
+            "responses": {
+              "200": {
+                "description": "Global market data",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "active_cryptocurrencies": {
+                              "type": "number"
+                            },
+                            "total_market_cap": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "number"
+                              }
+                            },
+                            "total_volume": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "parent_id": 8,
+        "level": 2,
+        "content": "# Market Sentiment Indicators\n\n**Input:** Global market data and individual coin performance\n\nAssess market sentiment and its potential impact on portfolio.\n\n**Output:** Market sentiment score, trend indicators, and correlation analysis",
+        "tools": []
+      },
+      {
+        "id": 10,
+        "parent_id": 8,
+        "level": 2,
+        "content": "# Investment Recommendations\n\n**Input:** Portfolio analysis results and market trend data\n\nGenerate actionable investment recommendations based on analysis.\n\n**Output:** Buy/hold/sell recommendations with reasoning and risk considerations",
+        "tools": []
+      }
+    ]
+  },
+  {
+    "script_name": "cat-facts-mood-enhancer",
+    "definition": "# Cat Facts Mood Enhancement Service\n\n**Input:** User mood level and preference for cat content types\n\nDeliver personalized cat facts and images to improve user mood based on preferences.\n\n> # Cat Facts Discovery Service\n>\n> **Input:** User mood level and content preference (facts vs images)\n>\n> Retrieve random cat facts to provide educational and entertaining content.\n>\n> **Tool:** https://catfact.ninja/fact\n>\n> > # Multiple Cat Facts Collection\n> >\n> > **Input:** Desired number of facts based on mood enhancement needs\n> >\n> > Gather multiple cat facts for variety and sustained mood improvement.\n> >\n> > **Tool:** https://catfact.ninja/facts\n> >\n> > **Output:** Collection of verified cat facts with length and entertainment value\n\n> # Cat Image Service\n>\n> **Input:** Image preferences and mood enhancement requirements\n>\n> Provide adorable cat images to complement the educational facts.\n>\n> **Tool:** https://api.thecatapi.com/v1/images/search\n>\n> > # Breed-Specific Cat Images\n> >\n> > **Input:** Specific cat breed preferences if mentioned in facts\n> >\n> > Retrieve images of specific cat breeds to enhance learning experience.\n> >\n> > **Tool:** https://api.thecatapi.com/v1/breeds\n> >\n> > **Output:** Breed information with corresponding images and characteristics\n\n> # Mood Enhancement Optimization\n>\n> **Input:** User interaction patterns and content effectiveness\n>\n> Analyze which combination of facts and images provides optimal mood improvement.\n>\n> > # Content Personalization\n> >\n> > **Input:** User preferences and previous session effectiveness\n> >\n> > Customize content delivery based on what worked best for mood enhancement.\n> >\n> > **Output:** Personalized content mix with optimized fact-to-image ratio\n>\n> > # Follow-up Engagement\n> >\n> > **Input:** Session duration and user engagement metrics\n> >\n> > Determine optimal timing for additional content delivery.\n> >\n> > **Output:** Recommended follow-up schedule and content type suggestions\n\n**Output:** Curated collection of cat facts and images optimized for mood enhancement, with personalized delivery timing and content mix recommendations",
+    "agents": [
+      {
+        "id": 1,
+        "parent_id": null,
+        "level": 0,
+        "content": "# Cat Facts Mood Enhancement Service\n\n**Input:** User mood level and preference for cat content types\n\nDeliver personalized cat facts and images to improve user mood based on preferences.\n\n\n\n\n\n\n\n**Output:** Curated collection of cat facts and images optimized for mood enhancement, with personalized delivery timing and content mix recommendations",
+        "tools": [
+          {
+            "hostname": "catfact.ninja",
+            "path": "/fact",
+            "method": "GET",
+            "summary": "Get a random cat fact",
+            "parameters": [
+              {
+                "name": "max_length",
+                "in": "query",
+                "description": "Maximum length of the fact",
+                "required": false,
+                "schema": {
+                  "type": "number"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Random cat fact",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "fact": {
+                          "type": "string"
+                        },
+                        "length": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "catfact.ninja",
+            "path": "/facts",
+            "method": "GET",
+            "summary": "Get multiple cat facts",
+            "parameters": [
+              {
+                "name": "limit",
+                "in": "query",
+                "description": "Number of facts to return",
+                "required": false,
+                "schema": {
+                  "type": "number"
+                }
+              },
+              {
+                "name": "max_length",
+                "in": "query",
+                "description": "Maximum length of facts",
+                "required": false,
+                "schema": {
+                  "type": "number"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Multiple cat facts",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "fact": {
+                                "type": "string"
+                              },
+                              "length": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.thecatapi.com",
+            "path": "/v1/images/search",
+            "method": "GET",
+            "summary": "Search for cat images",
+            "parameters": [
+              {
+                "name": "limit",
+                "in": "query",
+                "description": "Number of images to return",
+                "required": false,
+                "schema": {
+                  "type": "number"
+                }
+              },
+              {
+                "name": "breed_ids",
+                "in": "query",
+                "description": "Specific breed IDs",
+                "required": false,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Cat images",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "width": {
+                            "type": "number"
+                          },
+                          "height": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.thecatapi.com",
+            "path": "/v1/breeds",
+            "method": "GET",
+            "summary": "Get cat breeds",
+            "responses": {
+              "200": {
+                "description": "Cat breeds list",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "temperament": {
+                            "type": "string"
+                          },
+                          "origin": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "parent_id": 1,
+        "level": 1,
+        "content": "# Cat Facts Discovery Service\n\n**Input:** User mood level and content preference (facts vs images)\n\nRetrieve random cat facts to provide educational and entertaining content.\n\n**Tool:** https://catfact.ninja/fact",
+        "tools": [
+          {
+            "hostname": "catfact.ninja",
+            "path": "/fact",
+            "method": "GET",
+            "summary": "Get a random cat fact",
+            "parameters": [
+              {
+                "name": "max_length",
+                "in": "query",
+                "description": "Maximum length of the fact",
+                "required": false,
+                "schema": {
+                  "type": "number"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Random cat fact",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "fact": {
+                          "type": "string"
+                        },
+                        "length": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "catfact.ninja",
+            "path": "/facts",
+            "method": "GET",
+            "summary": "Get multiple cat facts",
+            "parameters": [
+              {
+                "name": "limit",
+                "in": "query",
+                "description": "Number of facts to return",
+                "required": false,
+                "schema": {
+                  "type": "number"
+                }
+              },
+              {
+                "name": "max_length",
+                "in": "query",
+                "description": "Maximum length of facts",
+                "required": false,
+                "schema": {
+                  "type": "number"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Multiple cat facts",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "fact": {
+                                "type": "string"
+                              },
+                              "length": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "parent_id": 2,
+        "level": 2,
+        "content": "# Multiple Cat Facts Collection\n\n**Input:** Desired number of facts based on mood enhancement needs\n\nGather multiple cat facts for variety and sustained mood improvement.\n\n**Tool:** https://catfact.ninja/facts\n\n**Output:** Collection of verified cat facts with length and entertainment value",
+        "tools": [
+          {
+            "hostname": "catfact.ninja",
+            "path": "/facts",
+            "method": "GET",
+            "summary": "Get multiple cat facts",
+            "parameters": [
+              {
+                "name": "limit",
+                "in": "query",
+                "description": "Number of facts to return",
+                "required": false,
+                "schema": {
+                  "type": "number"
+                }
+              },
+              {
+                "name": "max_length",
+                "in": "query",
+                "description": "Maximum length of facts",
+                "required": false,
+                "schema": {
+                  "type": "number"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Multiple cat facts",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "fact": {
+                                "type": "string"
+                              },
+                              "length": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "parent_id": 1,
+        "level": 1,
+        "content": "# Cat Image Service\n\n**Input:** Image preferences and mood enhancement requirements\n\nProvide adorable cat images to complement the educational facts.\n\n**Tool:** https://api.thecatapi.com/v1/images/search",
+        "tools": [
+          {
+            "hostname": "api.thecatapi.com",
+            "path": "/v1/images/search",
+            "method": "GET",
+            "summary": "Search for cat images",
+            "parameters": [
+              {
+                "name": "limit",
+                "in": "query",
+                "description": "Number of images to return",
+                "required": false,
+                "schema": {
+                  "type": "number"
+                }
+              },
+              {
+                "name": "breed_ids",
+                "in": "query",
+                "description": "Specific breed IDs",
+                "required": false,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Cat images",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "width": {
+                            "type": "number"
+                          },
+                          "height": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.thecatapi.com",
+            "path": "/v1/breeds",
+            "method": "GET",
+            "summary": "Get cat breeds",
+            "responses": {
+              "200": {
+                "description": "Cat breeds list",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "temperament": {
+                            "type": "string"
+                          },
+                          "origin": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "parent_id": 4,
+        "level": 2,
+        "content": "# Breed-Specific Cat Images\n\n**Input:** Specific cat breed preferences if mentioned in facts\n\nRetrieve images of specific cat breeds to enhance learning experience.\n\n**Tool:** https://api.thecatapi.com/v1/breeds\n\n**Output:** Breed information with corresponding images and characteristics",
+        "tools": [
+          {
+            "hostname": "api.thecatapi.com",
+            "path": "/v1/breeds",
+            "method": "GET",
+            "summary": "Get cat breeds",
+            "responses": {
+              "200": {
+                "description": "Cat breeds list",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "temperament": {
+                            "type": "string"
+                          },
+                          "origin": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "parent_id": 1,
+        "level": 1,
+        "content": "# Mood Enhancement Optimization\n\n**Input:** User interaction patterns and content effectiveness\n\nAnalyze which combination of facts and images provides optimal mood improvement.",
+        "tools": []
+      },
+      {
+        "id": 7,
+        "parent_id": 6,
+        "level": 2,
+        "content": "# Content Personalization\n\n**Input:** User preferences and previous session effectiveness\n\nCustomize content delivery based on what worked best for mood enhancement.\n\n**Output:** Personalized content mix with optimized fact-to-image ratio",
+        "tools": []
+      },
+      {
+        "id": 8,
+        "parent_id": 6,
+        "level": 2,
+        "content": "# Follow-up Engagement\n\n**Input:** Session duration and user engagement metrics\n\nDetermine optimal timing for additional content delivery.\n\n**Output:** Recommended follow-up schedule and content type suggestions",
+        "tools": []
+      }
+    ]
+  },
+  {
+    "script_name": "weather-travel-advisor",
+    "definition": "# Weather-Based Travel Advisor\n\n**Input:** Destination city name and travel date range\n\nAnalyze weather conditions and provide comprehensive travel recommendations including what to pack and best activities.\n\n> # Weather Forecast Analysis\n>\n> **Input:** City name and date range for travel planning\n>\n> Retrieve detailed weather forecast to understand conditions during the travel period.\n>\n> **Tool:** https://api.openweathermap.org/data/2.5/forecast\n>\n> > # Current Weather Check\n> >\n> > **Input:** City coordinates from forecast API\n> >\n> > Get current weather conditions to complement the forecast data.\n> >\n> > **Tool:** https://api.openweathermap.org/data/2.5/weather\n> >\n> > **Output:** Current temperature, humidity, wind conditions, and weather description\n\n> # Location Information Lookup\n>\n> **Input:** Destination city name for geographic context\n>\n> Gather comprehensive location data including timezone, population, and geographic details.\n>\n> **Tool:** https://restcountries.com/v3.1/capital/{city}\n>\n> **Output:** Country information, timezone, currency, and regional details\n\n> # Travel Recommendations Engine\n>\n> **Input:** Weather forecast data, location details, and travel preferences\n>\n> Generate personalized recommendations based on weather conditions and destination characteristics.\n>\n> > # Packing List Generator\n> >\n> > **Input:** Weather forecast and activity preferences\n> >\n> > Create customized packing recommendations based on expected weather conditions.\n> >\n> > **Output:** Detailed packing checklist with weather-specific items\n>\n> > # Activity Suggestions\n> >\n> > **Input:** Weather conditions and location type\n> >\n> > Suggest appropriate activities based on forecasted weather and destination features.\n> >\n> > **Output:** Indoor and outdoor activity recommendations with weather considerations\n\n**Output:** Complete travel advisory with weather forecast, packing recommendations, activity suggestions, and location insights",
+    "agents": [
+      {
+        "id": 1,
+        "parent_id": null,
+        "level": 0,
+        "content": "# Weather-Based Travel Advisor\n\n**Input:** Destination city name and travel date range\n\nAnalyze weather conditions and provide comprehensive travel recommendations including what to pack and best activities.\n\n\n\n\n\n\n\n**Output:** Complete travel advisory with weather forecast, packing recommendations, activity suggestions, and location insights",
+        "tools": [
+          {
+            "hostname": "api.openweathermap.org",
+            "path": "/data/2.5/forecast",
+            "method": "GET",
+            "summary": "Get weather forecast",
+            "parameters": [
+              {
+                "name": "q",
+                "in": "query",
+                "description": "City name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "appid",
+                "in": "query",
+                "description": "API key",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Weather forecast data",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "dt": {
+                                "type": "number"
+                              },
+                              "main": {
+                                "type": "object",
+                                "properties": {
+                                  "temp": {
+                                    "type": "number"
+                                  },
+                                  "humidity": {
+                                    "type": "number"
+                                  }
+                                }
+                              },
+                              "weather": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "main": {
+                                      "type": "string"
+                                    },
+                                    "description": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.openweathermap.org",
+            "path": "/data/2.5/weather",
+            "method": "GET",
+            "summary": "Get current weather data",
+            "parameters": [
+              {
+                "name": "q",
+                "in": "query",
+                "description": "City name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "appid",
+                "in": "query",
+                "description": "API key",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Current weather data",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "weather": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "main": {
+                                "type": "string"
+                              },
+                              "description": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "main": {
+                          "type": "object",
+                          "properties": {
+                            "temp": {
+                              "type": "number"
+                            },
+                            "humidity": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "restcountries.com",
+            "path": "/v3.1/capital/{capital}",
+            "method": "GET",
+            "summary": "Get country by capital",
+            "parameters": [
+              {
+                "name": "capital",
+                "in": "path",
+                "description": "Capital city name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Country information",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "object",
+                            "properties": {
+                              "common": {
+                                "type": "string"
+                              },
+                              "official": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "capital": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "currencies": {
+                            "type": "object"
+                          },
+                          "timezones": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "parent_id": 1,
+        "level": 1,
+        "content": "# Weather Forecast Analysis\n\n**Input:** City name and date range for travel planning\n\nRetrieve detailed weather forecast to understand conditions during the travel period.\n\n**Tool:** https://api.openweathermap.org/data/2.5/forecast",
+        "tools": [
+          {
+            "hostname": "api.openweathermap.org",
+            "path": "/data/2.5/forecast",
+            "method": "GET",
+            "summary": "Get weather forecast",
+            "parameters": [
+              {
+                "name": "q",
+                "in": "query",
+                "description": "City name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "appid",
+                "in": "query",
+                "description": "API key",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Weather forecast data",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "dt": {
+                                "type": "number"
+                              },
+                              "main": {
+                                "type": "object",
+                                "properties": {
+                                  "temp": {
+                                    "type": "number"
+                                  },
+                                  "humidity": {
+                                    "type": "number"
+                                  }
+                                }
+                              },
+                              "weather": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "main": {
+                                      "type": "string"
+                                    },
+                                    "description": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.openweathermap.org",
+            "path": "/data/2.5/weather",
+            "method": "GET",
+            "summary": "Get current weather data",
+            "parameters": [
+              {
+                "name": "q",
+                "in": "query",
+                "description": "City name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "appid",
+                "in": "query",
+                "description": "API key",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Current weather data",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "weather": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "main": {
+                                "type": "string"
+                              },
+                              "description": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "main": {
+                          "type": "object",
+                          "properties": {
+                            "temp": {
+                              "type": "number"
+                            },
+                            "humidity": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "parent_id": 2,
+        "level": 2,
+        "content": "# Current Weather Check\n\n**Input:** City coordinates from forecast API\n\nGet current weather conditions to complement the forecast data.\n\n**Tool:** https://api.openweathermap.org/data/2.5/weather\n\n**Output:** Current temperature, humidity, wind conditions, and weather description",
+        "tools": [
+          {
+            "hostname": "api.openweathermap.org",
+            "path": "/data/2.5/weather",
+            "method": "GET",
+            "summary": "Get current weather data",
+            "parameters": [
+              {
+                "name": "q",
+                "in": "query",
+                "description": "City name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "appid",
+                "in": "query",
+                "description": "API key",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Current weather data",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "weather": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "main": {
+                                "type": "string"
+                              },
+                              "description": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "main": {
+                          "type": "object",
+                          "properties": {
+                            "temp": {
+                              "type": "number"
+                            },
+                            "humidity": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "parent_id": 1,
+        "level": 1,
+        "content": "# Location Information Lookup\n\n**Input:** Destination city name for geographic context\n\nGather comprehensive location data including timezone, population, and geographic details.\n\n**Tool:** https://restcountries.com/v3.1/capital/{city}\n\n**Output:** Country information, timezone, currency, and regional details",
+        "tools": [
+          {
+            "hostname": "restcountries.com",
+            "path": "/v3.1/capital/{capital}",
+            "method": "GET",
+            "summary": "Get country by capital",
+            "parameters": [
+              {
+                "name": "capital",
+                "in": "path",
+                "description": "Capital city name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Country information",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "object",
+                            "properties": {
+                              "common": {
+                                "type": "string"
+                              },
+                              "official": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "capital": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "currencies": {
+                            "type": "object"
+                          },
+                          "timezones": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "parent_id": 1,
+        "level": 1,
+        "content": "# Travel Recommendations Engine\n\n**Input:** Weather forecast data, location details, and travel preferences\n\nGenerate personalized recommendations based on weather conditions and destination characteristics.",
+        "tools": []
+      },
+      {
+        "id": 6,
+        "parent_id": 5,
+        "level": 2,
+        "content": "# Packing List Generator\n\n**Input:** Weather forecast and activity preferences\n\nCreate customized packing recommendations based on expected weather conditions.\n\n**Output:** Detailed packing checklist with weather-specific items",
+        "tools": []
+      },
+      {
+        "id": 7,
+        "parent_id": 5,
+        "level": 2,
+        "content": "# Activity Suggestions\n\n**Input:** Weather conditions and location type\n\nSuggest appropriate activities based on forecasted weather and destination features.\n\n**Output:** Indoor and outdoor activity recommendations with weather considerations",
+        "tools": []
+      }
+    ]
+  },
+  {
+    "script_name": "recipe-nutrition-planner",
+    "definition": "# Smart Recipe and Nutrition Planner\n\n**Input:** Dietary preferences, ingredient availability, and nutritional goals\n\nFind recipes matching dietary requirements and analyze their nutritional content for meal planning.\n\n> # Recipe Discovery Service\n>\n> **Input:** Dietary restrictions, cuisine preferences, and available ingredients\n>\n> Search for recipes that match user preferences and ingredient availability.\n>\n> **Tool:** https://www.themealdb.com/api/json/v1/1/search.php\n>\n> > # Recipe Details Lookup\n> >\n> > **Input:** Recipe ID from search results\n> >\n> > Retrieve complete recipe information including instructions and ingredient quantities.\n> >\n> > **Tool:** https://www.themealdb.com/api/json/v1/1/lookup.php\n> >\n> > **Output:** Complete recipe with ingredients, measurements, and cooking instructions\n>\n> > # Alternative Recipe Search\n> >\n> > **Input:** Recipe category and dietary constraints\n> >\n> > Find additional recipe options in the same category for variety.\n> >\n> > **Tool:** https://www.themealdb.com/api/json/v1/1/filter.php\n> >\n> > **Output:** List of alternative recipes with basic details\n\n> # Nutritional Analysis Service\n>\n> **Input:** Recipe ingredients and quantities from selected recipes\n>\n> Calculate comprehensive nutritional information for meal planning.\n>\n> **Tool:** https://api.nal.usda.gov/fdc/v1/foods/search\n>\n> > # Ingredient Nutrition Lookup\n> >\n> > **Input:** Individual ingredient names and quantities\n> >\n> > Get detailed nutritional data for each recipe ingredient.\n> >\n> > **Tool:** https://api.nal.usda.gov/fdc/v1/food/{fdcId}\n> >\n> > **Output:** Macro and micronutrient content per ingredient\n>\n> > # Daily Nutrition Calculator\n> >\n> > **Input:** Combined nutritional data from all ingredients\n> >\n> > Calculate total nutritional values and compare against daily recommended values.\n> >\n> > **Output:** Total calories, macronutrients, vitamins, and minerals with daily value percentages\n\n**Output:** Curated recipe collection with complete nutritional analysis, ingredient lists, cooking instructions, and meal planning recommendations",
+    "agents": [
+      {
+        "id": 1,
+        "parent_id": null,
+        "level": 0,
+        "content": "# Smart Recipe and Nutrition Planner\n\n**Input:** Dietary preferences, ingredient availability, and nutritional goals\n\nFind recipes matching dietary requirements and analyze their nutritional content for meal planning.\n\n\n\n\n\n**Output:** Curated recipe collection with complete nutritional analysis, ingredient lists, cooking instructions, and meal planning recommendations",
+        "tools": [
+          {
+            "hostname": "www.themealdb.com",
+            "path": "/api/json/v1/1/search.php",
+            "method": "GET",
+            "summary": "Search for meals",
+            "parameters": [
+              {
+                "name": "s",
+                "in": "query",
+                "description": "Search term",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Search results",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "meals": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "idMeal": {
+                                "type": "string"
+                              },
+                              "strMeal": {
+                                "type": "string"
+                              },
+                              "strCategory": {
+                                "type": "string"
+                              },
+                              "strInstructions": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "www.themealdb.com",
+            "path": "/api/json/v1/1/lookup.php",
+            "method": "GET",
+            "summary": "Lookup meal by ID",
+            "parameters": [
+              {
+                "name": "i",
+                "in": "query",
+                "description": "Meal ID",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Meal details",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "meals": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "idMeal": {
+                                "type": "string"
+                              },
+                              "strMeal": {
+                                "type": "string"
+                              },
+                              "strInstructions": {
+                                "type": "string"
+                              },
+                              "strIngredient1": {
+                                "type": "string"
+                              },
+                              "strMeasure1": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "www.themealdb.com",
+            "path": "/api/json/v1/1/filter.php",
+            "method": "GET",
+            "summary": "Filter meals by category",
+            "parameters": [
+              {
+                "name": "c",
+                "in": "query",
+                "description": "Category",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Filtered meals",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "meals": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "idMeal": {
+                                "type": "string"
+                              },
+                              "strMeal": {
+                                "type": "string"
+                              },
+                              "strMealThumb": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.nal.usda.gov",
+            "path": "/fdc/v1/foods/search",
+            "method": "GET",
+            "summary": "Search for foods",
+            "parameters": [
+              {
+                "name": "query",
+                "in": "query",
+                "description": "Search term",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "api_key",
+                "in": "query",
+                "description": "API key",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Search results",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "foods": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "fdcId": {
+                                "type": "number"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "foodNutrients": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "nutrientName": {
+                                      "type": "string"
+                                    },
+                                    "value": {
+                                      "type": "number"
+                                    },
+                                    "unitName": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.nal.usda.gov",
+            "path": "/fdc/v1/food/{fdcId}",
+            "method": "GET",
+            "summary": "Get food details by ID",
+            "parameters": [
+              {
+                "name": "fdcId",
+                "in": "path",
+                "description": "Food Data Central ID",
+                "required": true,
+                "schema": {
+                  "type": "number"
+                }
+              },
+              {
+                "name": "api_key",
+                "in": "query",
+                "description": "API key",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Food details",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "fdcId": {
+                          "type": "number"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "foodNutrients": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "nutrient": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "unitName": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "amount": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "parent_id": 1,
+        "level": 1,
+        "content": "# Recipe Discovery Service\n\n**Input:** Dietary restrictions, cuisine preferences, and available ingredients\n\nSearch for recipes that match user preferences and ingredient availability.\n\n**Tool:** https://www.themealdb.com/api/json/v1/1/search.php",
+        "tools": [
+          {
+            "hostname": "www.themealdb.com",
+            "path": "/api/json/v1/1/search.php",
+            "method": "GET",
+            "summary": "Search for meals",
+            "parameters": [
+              {
+                "name": "s",
+                "in": "query",
+                "description": "Search term",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Search results",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "meals": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "idMeal": {
+                                "type": "string"
+                              },
+                              "strMeal": {
+                                "type": "string"
+                              },
+                              "strCategory": {
+                                "type": "string"
+                              },
+                              "strInstructions": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "www.themealdb.com",
+            "path": "/api/json/v1/1/lookup.php",
+            "method": "GET",
+            "summary": "Lookup meal by ID",
+            "parameters": [
+              {
+                "name": "i",
+                "in": "query",
+                "description": "Meal ID",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Meal details",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "meals": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "idMeal": {
+                                "type": "string"
+                              },
+                              "strMeal": {
+                                "type": "string"
+                              },
+                              "strInstructions": {
+                                "type": "string"
+                              },
+                              "strIngredient1": {
+                                "type": "string"
+                              },
+                              "strMeasure1": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "www.themealdb.com",
+            "path": "/api/json/v1/1/filter.php",
+            "method": "GET",
+            "summary": "Filter meals by category",
+            "parameters": [
+              {
+                "name": "c",
+                "in": "query",
+                "description": "Category",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Filtered meals",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "meals": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "idMeal": {
+                                "type": "string"
+                              },
+                              "strMeal": {
+                                "type": "string"
+                              },
+                              "strMealThumb": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "parent_id": 2,
+        "level": 2,
+        "content": "# Recipe Details Lookup\n\n**Input:** Recipe ID from search results\n\nRetrieve complete recipe information including instructions and ingredient quantities.\n\n**Tool:** https://www.themealdb.com/api/json/v1/1/lookup.php\n\n**Output:** Complete recipe with ingredients, measurements, and cooking instructions",
+        "tools": [
+          {
+            "hostname": "www.themealdb.com",
+            "path": "/api/json/v1/1/lookup.php",
+            "method": "GET",
+            "summary": "Lookup meal by ID",
+            "parameters": [
+              {
+                "name": "i",
+                "in": "query",
+                "description": "Meal ID",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Meal details",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "meals": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "idMeal": {
+                                "type": "string"
+                              },
+                              "strMeal": {
+                                "type": "string"
+                              },
+                              "strInstructions": {
+                                "type": "string"
+                              },
+                              "strIngredient1": {
+                                "type": "string"
+                              },
+                              "strMeasure1": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "parent_id": 2,
+        "level": 2,
+        "content": "# Alternative Recipe Search\n\n**Input:** Recipe category and dietary constraints\n\nFind additional recipe options in the same category for variety.\n\n**Tool:** https://www.themealdb.com/api/json/v1/1/filter.php\n\n**Output:** List of alternative recipes with basic details",
+        "tools": [
+          {
+            "hostname": "www.themealdb.com",
+            "path": "/api/json/v1/1/filter.php",
+            "method": "GET",
+            "summary": "Filter meals by category",
+            "parameters": [
+              {
+                "name": "c",
+                "in": "query",
+                "description": "Category",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Filtered meals",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "meals": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "idMeal": {
+                                "type": "string"
+                              },
+                              "strMeal": {
+                                "type": "string"
+                              },
+                              "strMealThumb": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "parent_id": 1,
+        "level": 1,
+        "content": "# Nutritional Analysis Service\n\n**Input:** Recipe ingredients and quantities from selected recipes\n\nCalculate comprehensive nutritional information for meal planning.\n\n**Tool:** https://api.nal.usda.gov/fdc/v1/foods/search",
+        "tools": [
+          {
+            "hostname": "api.nal.usda.gov",
+            "path": "/fdc/v1/foods/search",
+            "method": "GET",
+            "summary": "Search for foods",
+            "parameters": [
+              {
+                "name": "query",
+                "in": "query",
+                "description": "Search term",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "api_key",
+                "in": "query",
+                "description": "API key",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Search results",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "foods": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "fdcId": {
+                                "type": "number"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "foodNutrients": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "nutrientName": {
+                                      "type": "string"
+                                    },
+                                    "value": {
+                                      "type": "number"
+                                    },
+                                    "unitName": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.nal.usda.gov",
+            "path": "/fdc/v1/food/{fdcId}",
+            "method": "GET",
+            "summary": "Get food details by ID",
+            "parameters": [
+              {
+                "name": "fdcId",
+                "in": "path",
+                "description": "Food Data Central ID",
+                "required": true,
+                "schema": {
+                  "type": "number"
+                }
+              },
+              {
+                "name": "api_key",
+                "in": "query",
+                "description": "API key",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Food details",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "fdcId": {
+                          "type": "number"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "foodNutrients": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "nutrient": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "unitName": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "amount": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "parent_id": 5,
+        "level": 2,
+        "content": "# Ingredient Nutrition Lookup\n\n**Input:** Individual ingredient names and quantities\n\nGet detailed nutritional data for each recipe ingredient.\n\n**Tool:** https://api.nal.usda.gov/fdc/v1/food/{fdcId}\n\n**Output:** Macro and micronutrient content per ingredient",
+        "tools": [
+          {
+            "hostname": "api.nal.usda.gov",
+            "path": "/fdc/v1/food/{fdcId}",
+            "method": "GET",
+            "summary": "Get food details by ID",
+            "parameters": [
+              {
+                "name": "fdcId",
+                "in": "path",
+                "description": "Food Data Central ID",
+                "required": true,
+                "schema": {
+                  "type": "number"
+                }
+              },
+              {
+                "name": "api_key",
+                "in": "query",
+                "description": "API key",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Food details",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "fdcId": {
+                          "type": "number"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "foodNutrients": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "nutrient": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "unitName": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "amount": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "parent_id": 5,
+        "level": 2,
+        "content": "# Daily Nutrition Calculator\n\n**Input:** Combined nutritional data from all ingredients\n\nCalculate total nutritional values and compare against daily recommended values.\n\n**Output:** Total calories, macronutrients, vitamins, and minerals with daily value percentages",
+        "tools": []
+      }
+    ]
+  },
+  {
+    "script_name": "github-project-analyzer",
+    "definition": "# GitHub Project Analysis and Documentation\n\n**Input:** GitHub repository URL and analysis requirements\n\nAnalyze a GitHub repository's structure, contributors, and activity to generate comprehensive project insights.\n\n> # Repository Information Service\n>\n> **Input:** Repository owner and name from GitHub URL\n>\n> Retrieve basic repository metadata and statistics.\n>\n> **Tool:** https://api.github.com/repos/{owner}/{repo}\n>\n> **Output:** Repository description, language, stars, forks, creation date, and last update\n\n> # Repository Analysis Engine\n>\n> **Input:** Repository details and analysis depth requirements\n>\n> Perform comprehensive analysis of repository structure and activity.\n>\n> > # File Structure Analysis\n> >\n> > **Input:** Repository owner and name for content exploration\n> >\n> > Analyze repository structure and identify key files and directories.\n> >\n> > **Tool:** https://api.github.com/repos/{owner}/{repo}/contents\n> >\n> > **Output:** Directory structure, file types, and key configuration files\n>\n> > # Contributor Analysis\n> >\n> > **Input:** Repository identifier for contributor data\n> >\n> > Analyze contributor activity and identify key project maintainers.\n> >\n> > **Tool:** https://api.github.com/repos/{owner}/{repo}/contributors\n> >\n> > **Output:** Contributor list with contribution counts and activity patterns\n>\n> > # Commit History Analysis\n> >\n> > **Input:** Repository details for commit tracking\n> >\n> > Analyze recent commit activity to understand development patterns.\n> >\n> > **Tool:** https://api.github.com/repos/{owner}/{repo}/commits\n> >\n> > **Output:** Commit frequency, recent activity, and development velocity\n\n> # Issue and Pull Request Analysis\n>\n> **Input:** Repository information for community activity assessment\n>\n> Analyze community engagement through issues and pull requests.\n>\n> > # Open Issues Review\n> >\n> > **Input:** Repository identifier for issue tracking\n> >\n> > Review current open issues to understand project challenges.\n> >\n> > **Tool:** https://api.github.com/repos/{owner}/{repo}/issues\n> >\n> > **Output:** Open issue count, common issue types, and response patterns\n>\n> > # Pull Request Activity\n> >\n> > **Input:** Repository details for PR analysis\n> >\n> > Analyze pull request activity and merge patterns.\n> >\n> > **Tool:** https://api.github.com/repos/{owner}/{repo}/pulls\n> >\n> > **Output:** PR merge rate, average time to merge, and contributor participation\n\n**Output:** Comprehensive repository analysis with structure overview, contributor insights, development activity patterns, and community engagement metrics",
+    "agents": [
+      {
+        "id": 1,
+        "parent_id": null,
+        "level": 0,
+        "content": "# GitHub Project Analysis and Documentation\n\n**Input:** GitHub repository URL and analysis requirements\n\nAnalyze a GitHub repository's structure, contributors, and activity to generate comprehensive project insights.\n\n\n\n\n\n\n\n**Output:** Comprehensive repository analysis with structure overview, contributor insights, development activity patterns, and community engagement metrics",
+        "tools": [
+          {
+            "hostname": "api.github.com",
+            "path": "/repos/{owner}/{repo}",
+            "method": "GET",
+            "summary": "Get repository information",
+            "parameters": [
+              {
+                "name": "owner",
+                "in": "path",
+                "description": "Repository owner",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "repo",
+                "in": "path",
+                "description": "Repository name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Repository information",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "language": {
+                          "type": "string"
+                        },
+                        "stargazers_count": {
+                          "type": "number"
+                        },
+                        "forks_count": {
+                          "type": "number"
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "updated_at": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.github.com",
+            "path": "/repos/{owner}/{repo}/contents",
+            "method": "GET",
+            "summary": "Get repository contents",
+            "parameters": [
+              {
+                "name": "owner",
+                "in": "path",
+                "description": "Repository owner",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "repo",
+                "in": "path",
+                "description": "Repository name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Repository contents",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "size": {
+                            "type": "number"
+                          },
+                          "download_url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.github.com",
+            "path": "/repos/{owner}/{repo}/contributors",
+            "method": "GET",
+            "summary": "Get repository contributors",
+            "parameters": [
+              {
+                "name": "owner",
+                "in": "path",
+                "description": "Repository owner",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "repo",
+                "in": "path",
+                "description": "Repository name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Contributors list",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "login": {
+                            "type": "string"
+                          },
+                          "contributions": {
+                            "type": "number"
+                          },
+                          "avatar_url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.github.com",
+            "path": "/repos/{owner}/{repo}/commits",
+            "method": "GET",
+            "summary": "Get repository commits",
+            "parameters": [
+              {
+                "name": "owner",
+                "in": "path",
+                "description": "Repository owner",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "repo",
+                "in": "path",
+                "description": "Repository name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Commits list",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "sha": {
+                            "type": "string"
+                          },
+                          "commit": {
+                            "type": "object",
+                            "properties": {
+                              "message": {
+                                "type": "string"
+                              },
+                              "author": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "date": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.github.com",
+            "path": "/repos/{owner}/{repo}/issues",
+            "method": "GET",
+            "summary": "Get repository issues",
+            "parameters": [
+              {
+                "name": "owner",
+                "in": "path",
+                "description": "Repository owner",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "repo",
+                "in": "path",
+                "description": "Repository name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Issues list",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "number": {
+                            "type": "number"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.github.com",
+            "path": "/repos/{owner}/{repo}/pulls",
+            "method": "GET",
+            "summary": "Get repository pull requests",
+            "parameters": [
+              {
+                "name": "owner",
+                "in": "path",
+                "description": "Repository owner",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "repo",
+                "in": "path",
+                "description": "Repository name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Pull requests list",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "number": {
+                            "type": "number"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "parent_id": 1,
+        "level": 1,
+        "content": "# Repository Information Service\n\n**Input:** Repository owner and name from GitHub URL\n\nRetrieve basic repository metadata and statistics.\n\n**Tool:** https://api.github.com/repos/{owner}/{repo}\n\n**Output:** Repository description, language, stars, forks, creation date, and last update",
+        "tools": [
+          {
+            "hostname": "api.github.com",
+            "path": "/repos/{owner}/{repo}",
+            "method": "GET",
+            "summary": "Get repository information",
+            "parameters": [
+              {
+                "name": "owner",
+                "in": "path",
+                "description": "Repository owner",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "repo",
+                "in": "path",
+                "description": "Repository name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Repository information",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "language": {
+                          "type": "string"
+                        },
+                        "stargazers_count": {
+                          "type": "number"
+                        },
+                        "forks_count": {
+                          "type": "number"
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "updated_at": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "parent_id": 1,
+        "level": 1,
+        "content": "# Repository Analysis Engine\n\n**Input:** Repository details and analysis depth requirements\n\nPerform comprehensive analysis of repository structure and activity.",
+        "tools": [
+          {
+            "hostname": "api.github.com",
+            "path": "/repos/{owner}/{repo}/contents",
+            "method": "GET",
+            "summary": "Get repository contents",
+            "parameters": [
+              {
+                "name": "owner",
+                "in": "path",
+                "description": "Repository owner",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "repo",
+                "in": "path",
+                "description": "Repository name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Repository contents",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "size": {
+                            "type": "number"
+                          },
+                          "download_url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.github.com",
+            "path": "/repos/{owner}/{repo}/contributors",
+            "method": "GET",
+            "summary": "Get repository contributors",
+            "parameters": [
+              {
+                "name": "owner",
+                "in": "path",
+                "description": "Repository owner",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "repo",
+                "in": "path",
+                "description": "Repository name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Contributors list",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "login": {
+                            "type": "string"
+                          },
+                          "contributions": {
+                            "type": "number"
+                          },
+                          "avatar_url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.github.com",
+            "path": "/repos/{owner}/{repo}/commits",
+            "method": "GET",
+            "summary": "Get repository commits",
+            "parameters": [
+              {
+                "name": "owner",
+                "in": "path",
+                "description": "Repository owner",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "repo",
+                "in": "path",
+                "description": "Repository name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Commits list",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "sha": {
+                            "type": "string"
+                          },
+                          "commit": {
+                            "type": "object",
+                            "properties": {
+                              "message": {
+                                "type": "string"
+                              },
+                              "author": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "date": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "parent_id": 3,
+        "level": 2,
+        "content": "# File Structure Analysis\n\n**Input:** Repository owner and name for content exploration\n\nAnalyze repository structure and identify key files and directories.\n\n**Tool:** https://api.github.com/repos/{owner}/{repo}/contents\n\n**Output:** Directory structure, file types, and key configuration files",
+        "tools": [
+          {
+            "hostname": "api.github.com",
+            "path": "/repos/{owner}/{repo}/contents",
+            "method": "GET",
+            "summary": "Get repository contents",
+            "parameters": [
+              {
+                "name": "owner",
+                "in": "path",
+                "description": "Repository owner",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "repo",
+                "in": "path",
+                "description": "Repository name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Repository contents",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "size": {
+                            "type": "number"
+                          },
+                          "download_url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "parent_id": 3,
+        "level": 2,
+        "content": "# Contributor Analysis\n\n**Input:** Repository identifier for contributor data\n\nAnalyze contributor activity and identify key project maintainers.\n\n**Tool:** https://api.github.com/repos/{owner}/{repo}/contributors\n\n**Output:** Contributor list with contribution counts and activity patterns",
+        "tools": [
+          {
+            "hostname": "api.github.com",
+            "path": "/repos/{owner}/{repo}/contributors",
+            "method": "GET",
+            "summary": "Get repository contributors",
+            "parameters": [
+              {
+                "name": "owner",
+                "in": "path",
+                "description": "Repository owner",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "repo",
+                "in": "path",
+                "description": "Repository name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Contributors list",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "login": {
+                            "type": "string"
+                          },
+                          "contributions": {
+                            "type": "number"
+                          },
+                          "avatar_url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "parent_id": 3,
+        "level": 2,
+        "content": "# Commit History Analysis\n\n**Input:** Repository details for commit tracking\n\nAnalyze recent commit activity to understand development patterns.\n\n**Tool:** https://api.github.com/repos/{owner}/{repo}/commits\n\n**Output:** Commit frequency, recent activity, and development velocity",
+        "tools": [
+          {
+            "hostname": "api.github.com",
+            "path": "/repos/{owner}/{repo}/commits",
+            "method": "GET",
+            "summary": "Get repository commits",
+            "parameters": [
+              {
+                "name": "owner",
+                "in": "path",
+                "description": "Repository owner",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "repo",
+                "in": "path",
+                "description": "Repository name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Commits list",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "sha": {
+                            "type": "string"
+                          },
+                          "commit": {
+                            "type": "object",
+                            "properties": {
+                              "message": {
+                                "type": "string"
+                              },
+                              "author": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "date": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "parent_id": 1,
+        "level": 1,
+        "content": "# Issue and Pull Request Analysis\n\n**Input:** Repository information for community activity assessment\n\nAnalyze community engagement through issues and pull requests.",
+        "tools": [
+          {
+            "hostname": "api.github.com",
+            "path": "/repos/{owner}/{repo}/issues",
+            "method": "GET",
+            "summary": "Get repository issues",
+            "parameters": [
+              {
+                "name": "owner",
+                "in": "path",
+                "description": "Repository owner",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "repo",
+                "in": "path",
+                "description": "Repository name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Issues list",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "number": {
+                            "type": "number"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "hostname": "api.github.com",
+            "path": "/repos/{owner}/{repo}/pulls",
+            "method": "GET",
+            "summary": "Get repository pull requests",
+            "parameters": [
+              {
+                "name": "owner",
+                "in": "path",
+                "description": "Repository owner",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "repo",
+                "in": "path",
+                "description": "Repository name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Pull requests list",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "number": {
+                            "type": "number"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "parent_id": 7,
+        "level": 2,
+        "content": "# Open Issues Review\n\n**Input:** Repository identifier for issue tracking\n\nReview current open issues to understand project challenges.\n\n**Tool:** https://api.github.com/repos/{owner}/{repo}/issues\n\n**Output:** Open issue count, common issue types, and response patterns",
+        "tools": [
+          {
+            "hostname": "api.github.com",
+            "path": "/repos/{owner}/{repo}/issues",
+            "method": "GET",
+            "summary": "Get repository issues",
+            "parameters": [
+              {
+                "name": "owner",
+                "in": "path",
+                "description": "Repository owner",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "repo",
+                "in": "path",
+                "description": "Repository name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Issues list",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "number": {
+                            "type": "number"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "parent_id": 7,
+        "level": 2,
+        "content": "# Pull Request Activity\n\n**Input:** Repository details for PR analysis\n\nAnalyze pull request activity and merge patterns.\n\n**Tool:** https://api.github.com/repos/{owner}/{repo}/pulls\n\n**Output:** PR merge rate, average time to merge, and contributor participation",
+        "tools": [
+          {
+            "hostname": "api.github.com",
+            "path": "/repos/{owner}/{repo}/pulls",
+            "method": "GET",
+            "summary": "Get repository pull requests",
+            "parameters": [
+              {
+                "name": "owner",
+                "in": "path",
+                "description": "Repository owner",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              {
+                "name": "repo",
+                "in": "path",
+                "description": "Repository name",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Pull requests list",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "number": {
+                            "type": "number"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
