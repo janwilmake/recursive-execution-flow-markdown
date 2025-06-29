@@ -3,3 +3,9 @@
 Proof of concept of recursive streams in markdown format. Can be used for agents.
 
 <!-- if i can do this behind a paywall we actually something very interesting actually -->
+
+To try:
+
+```
+curl -N --no-buffer http://localhost:8787/level/1
+```
