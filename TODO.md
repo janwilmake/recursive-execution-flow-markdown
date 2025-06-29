@@ -12,7 +12,6 @@ GOAL: show that for the benchmark, hierarchical workflows can executed with tool
 
 Following up:
 
-- Show this to Sunil
 - Finish the stream api for a workflow with openai recursive tool calling
 - Support structured IO tools that may not require LLM if all data is present, and so I can work on paralellisation
 - Integrate with openapisearch and add oauth 2.1 authorization, making it super easy to create new workflows.
