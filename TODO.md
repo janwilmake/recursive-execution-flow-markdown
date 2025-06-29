@@ -2,6 +2,6 @@ GOAL: make a fully functional recursive-workflow-execution-engine with agents wi
 
 TODO
 
-- Create a dataset of real tools and definition workflows
-- Create a parser to get the appropriate tool based on natural language
-- ✅ Create a parser to turn the structured-workflow-definition into (sub)agents with tools in Cloudflare
+- ✅ Create a dataset of real tools and definition workflows
+- ✅ Create a parser to turn the structured-workflow-definition into flat JSON
+- Create a Cloudflare worker that turns @benchmark into (sub)agents with tools in Cloudflare
