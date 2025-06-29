@@ -14,3 +14,5 @@ To try:
 ```
 curl -N --no-buffer http://localhost:8787/level/1
 ```
+
+Check the draft [RFC](RFC.md)
