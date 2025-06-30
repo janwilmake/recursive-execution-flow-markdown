@@ -33,4 +33,4 @@ Create a Cloudflare typescript worker that imports `agents.json` and:
 
 Agents docs: https://developers.cloudflare.com/agents/llms-full.txt
 
-# Answer and implement!!!! https://lmpify.com/agentsjson-contai-20zznj0
+# Answer and implement!!!! https://letmeprompt.com/agentsjson-contai-20zznj0
