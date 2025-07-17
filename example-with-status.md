@@ -15,6 +15,11 @@ The company needs a proper legal entity before any investment activities. This i
 > >
 > > - Input: Incorporation documents, EIN
 > > - Output: Corporate bank account
+> >
+> > <details>
+> > <summary>test</summary>
+> > Some content.... is the block now also a part of it?
+> > </details>
 >
 > Cap table management is critical from the start. Even before outside investment, founders need proper documentation of their equity splits and vesting schedules.
 >
